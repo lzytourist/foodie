@@ -1,7 +1,7 @@
 from django.db import models
 
 from account.models import User
-from restaurant.models import Restaurant, Item, Modifier
+from restaurant.models import Item, Modifier
 
 
 class Order(models.Model):
@@ -9,16 +9,27 @@ class Order(models.Model):
         CASH = 'cash', 'Cash'
         CARD = 'card', 'Card'
 
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        CONFIRMED = 'confirmed', 'Confirmed'
+        DELIVERED = 'delivered', 'Delivered'
+
     user = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
         related_name='orders'
     )
+    delivery_address = models.CharField(max_length=255)
     total_price = models.IntegerField()
     payment_method = models.CharField(
         max_length=10,
         choices=PaymentMethod.choices,
         default=PaymentMethod.CASH
+    )
+    status = models.CharField(
+        max_length=10,
+        choices=Status.choices,
+        default=Status.PENDING
     )
 
     class Meta:

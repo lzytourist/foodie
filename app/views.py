@@ -1,4 +1,4 @@
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 
 from restaurant.models import Restaurant, Menu, Category, Item, Modifier
 from restaurant.serializers import RestaurantSerializer, MenuSerializer, CategorySerializer, ItemSerializer, \
