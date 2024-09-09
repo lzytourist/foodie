@@ -78,6 +78,10 @@ class CategorySerializer(BaseSerializer):
 
 class MenuSerializer(BaseSerializer):
     categories = CategorySerializer(many=True, read_only=True, source='menu_categories')
+    
+    def create(self, validated_data):
+        validated_data['restaurant_id'] = self.context['restaurant_id']
+        return super().create(validated_data)
 
     class Meta:
         model = Menu

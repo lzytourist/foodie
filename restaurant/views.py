@@ -1,5 +1,3 @@
-from lib2to3.fixes.fix_input import context
-
 from django.db.models import Q
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
@@ -40,75 +38,57 @@ class RestaurantModifyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Restaurant.objects.all()
 
 
-class MenuViewSet(ModelViewSet):
+class RestaurantBaseViewSet(ModelViewSet):
+    def get_queryset(self):
+        return filter_restaurant_records(
+            queryset=super().get_queryset(),
+            restaurant_id=self.kwargs.get('restaurant_id'),
+            user=self.request.user
+        )
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['restaurant_id'] = self.kwargs.get('restaurant_id')
+        return context
+
+
+class MenuViewSet(RestaurantBaseViewSet):
     queryset = Menu.objects.all()
     serializer_class = MenuSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrEmployee)
 
-    def get_queryset(self):
-        return filter_restaurant_records(
-            queryset=super().get_queryset(),
-            restaurant_id=self.kwargs.get('restaurant_id'),
-            user=self.request.user
-        )
-
-    def perform_create(self, serializer):
-        serializer.save(restaurant_id=self.kwargs.get('restaurant_id'))
 
 
-class CategoryViewSet(ModelViewSet):
+class CategoryViewSet(RestaurantBaseViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (IsAuthenticated, IsOwnerOrEmployee)
 
-    def get_queryset(self):
-        return filter_restaurant_records(
-            queryset=super().get_queryset(),
-            restaurant_id=self.kwargs.get('restaurant_id'),
-            user=self.request.user
-        )
-
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['restaurant_id'] = self.kwargs.get('restaurant_id')
         context['menu_id'] = self.kwargs.get('menu_id')
         return context
 
 
-class ItemViewSet(ModelViewSet):
+class ItemViewSet(RestaurantBaseViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrEmployee)
 
-    def get_queryset(self):
-        return filter_restaurant_records(
-            queryset=super().get_queryset(),
-            restaurant_id=self.kwargs.get('restaurant_id'),
-            user=self.request.user
-        )
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['restaurant_id'] = self.kwargs.get('restaurant_id')
         context['category_id'] = self.kwargs.get('category_id')
         return context
 
 
-class ModifierViewSet(ModelViewSet):
+class ModifierViewSet(RestaurantBaseViewSet):
     queryset = Modifier.objects.all()
     serializer_class = ModifierSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrEmployee)
 
-    def get_queryset(self):
-        return filter_restaurant_records(
-            queryset=super().get_queryset(),
-            restaurant_id=self.kwargs.get('restaurant_id'),
-            user=self.request.user
-        )
-
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['restaurant_id'] = self.kwargs.get('restaurant_id')
         context['item_id'] = self.kwargs.get('item_id')
         return context
 

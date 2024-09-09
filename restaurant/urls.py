@@ -26,7 +26,7 @@ router.register(
     basename='modifier'
 )
 router.register(
-    r'orders',
+    r'(?P<restaurant_id>\d+)/orders',
     OrderViewSet,
     basename='order'
 )
