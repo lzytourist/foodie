@@ -10,6 +10,7 @@ class Order(models.Model):
         CARD = 'card', 'Card'
 
     class Status(models.TextChoices):
+        NOT_PAID = 'not_paid', 'Not Paid'
         PENDING = 'pending', 'Pending'
         CONFIRMED = 'confirmed', 'Confirmed'
         DELIVERED = 'delivered', 'Delivered'
@@ -29,7 +30,7 @@ class Order(models.Model):
     status = models.CharField(
         max_length=10,
         choices=Status.choices,
-        default=Status.PENDING
+        default=Status.NOT_PAID
     )
 
     class Meta:

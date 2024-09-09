@@ -74,4 +74,5 @@ class OrderSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'total_price': {'read_only': True},
             'user': {'read_only': True},
+            'payment_method': {'required': True},
         }
