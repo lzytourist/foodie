@@ -4,6 +4,8 @@ from account.models import User
 
 
 class Restaurant(models.Model):
+    # Foreign key of user table. User can access their restaurants using restaurants query.
+    # Record is deleted when the user record is deleted from database.
     owner = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
@@ -18,6 +20,7 @@ class Restaurant(models.Model):
         return self.name
 
     class Meta:
+        # Setting database table name
         db_table = 'restaurants'
 
 
@@ -41,6 +44,8 @@ class RestaurantEmployee(models.Model):
 
     class Meta:
         db_table = 'restaurant_employees'
+
+        # Unique employee, restaurant combination discards duplicate entries
         constraints = [
             models.UniqueConstraint(
                 fields=['employee', 'restaurant'],

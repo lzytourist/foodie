@@ -6,10 +6,16 @@ from restaurant.models import Item, Modifier
 
 class Order(models.Model):
     class PaymentMethod(models.TextChoices):
+        """
+        Payment methods for an order
+        """
         CASH = 'cash', 'Cash'
         CARD = 'card', 'Card'
 
     class Status(models.TextChoices):
+        """
+        Order status
+        """
         NOT_PAID = 'not_paid', 'Not Paid'
         PENDING = 'pending', 'Pending'
         CONFIRMED = 'confirmed', 'Confirmed'
@@ -43,6 +49,7 @@ class OrderItem(models.Model):
         on_delete=models.CASCADE,
         related_name='order_items'
     )
+    # Item ordered by user. Item can not be deleted if it's been ordered
     item = models.ForeignKey(
         to=Item,
         on_delete=models.PROTECT,
