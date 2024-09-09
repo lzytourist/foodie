@@ -14,11 +14,16 @@ class RestaurantViewSet(ReadOnlyModelViewSet):
 
 
 class RestaurantBaseViewSet(ReadOnlyModelViewSet):
+    """
+    Base class for Menu, Category, Item, and Modifier
+    Filter by restaurant using route key.
+    """
     def get_queryset(self):
         return super().get_queryset().order_by('id').filter(restaurant_id=self.kwargs['restaurant_id'])
 
 
 class MenuViewSet(RestaurantBaseViewSet):
+    # Prefetch for sql query optimization
     queryset = Menu.objects.prefetch_related('menu_categories').all()
     serializer_class = MenuSerializer
 
@@ -28,6 +33,7 @@ class CategoryViewSet(RestaurantBaseViewSet):
     serializer_class = CategorySerializer
 
     def get_queryset(self):
+        # Additional filter for menu id
         return super().get_queryset().filter(menu_id=self.kwargs['menu_id'])
 
 
@@ -48,6 +54,7 @@ class ModifierViewSet(ReadOnlyModelViewSet):
 
 
 class OrderViewSet(ModelViewSet):
+    # Place order
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated,)

@@ -35,7 +35,7 @@ class RestaurantListCreateAPIView(ListCreateAPIView):
 class RestaurantModifyAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = RestaurantSerializer
     permission_classes = (IsAuthenticated, IsOwner)
-    queryset = Restaurant.objects.all()
+    queryset = Restaurant.objects.order_by('id').all()
 
 
 class RestaurantBaseViewSet(ModelViewSet):
