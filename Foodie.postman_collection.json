@@ -1053,7 +1053,7 @@
 					"response": []
 				},
 				{
-					"name": "New Request",
+					"name": "Orders",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -1064,7 +1064,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/v1/restaurants/orders/",
+							"raw": "http://127.0.0.1:8000/api/v1/restaurants/1/orders/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1077,6 +1077,7 @@
 								"api",
 								"v1",
 								"restaurants",
+								"1",
 								"orders",
 								""
 							]
