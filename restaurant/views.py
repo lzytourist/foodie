@@ -39,6 +39,12 @@ class RestaurantModifyAPIView(RetrieveUpdateDestroyAPIView):
 
 
 class RestaurantBaseViewSet(ModelViewSet):
+    """
+    Base class for restaurant menu, category, item and modifiers.
+    The restaurant id will be set to context, and it will be used during creation
+    of child classes
+    """
+
     def get_queryset(self):
         return filter_restaurant_records(
             queryset=super().get_queryset(),
@@ -47,6 +53,7 @@ class RestaurantBaseViewSet(ModelViewSet):
         )
 
     def get_serializer_context(self):
+        # Setting restaurant id to serializer context
         context = super().get_serializer_context()
         context['restaurant_id'] = self.kwargs.get('restaurant_id')
         return context
@@ -58,13 +65,13 @@ class MenuViewSet(RestaurantBaseViewSet):
     permission_classes = (IsAuthenticated, IsOwnerOrEmployee)
 
 
-
 class CategoryViewSet(RestaurantBaseViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (IsAuthenticated, IsOwnerOrEmployee)
 
     def get_serializer_context(self):
+        # Add menu id to serializer context
         context = super().get_serializer_context()
         context['menu_id'] = self.kwargs.get('menu_id')
         return context
@@ -75,8 +82,8 @@ class ItemViewSet(RestaurantBaseViewSet):
     serializer_class = ItemSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrEmployee)
 
-
     def get_serializer_context(self):
+        # Adding category id to serializer context
         context = super().get_serializer_context()
         context['category_id'] = self.kwargs.get('category_id')
         return context
@@ -88,6 +95,7 @@ class ModifierViewSet(RestaurantBaseViewSet):
     permission_classes = (IsAuthenticated, IsOwnerOrEmployee)
 
     def get_serializer_context(self):
+        # Adding item id to serializer context
         context = super().get_serializer_context()
         context['item_id'] = self.kwargs.get('item_id')
         return context
@@ -99,7 +107,10 @@ class RestaurantOrderViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
+        # Filter orders for a restaurant
+        # Ensure it's accessed by only owner and employees
         return super().get_queryset().filter(
-            Q(restaurant__owner=self.request.user) |
-            Q(restaurant__employees__employee=self.request.user)
+            Q(retaurant_id=self.kwargs.get('restaurant_id')) &
+            (Q(restaurant__owner=self.request.user) |
+             Q(restaurant__employees__employee=self.request.user))
         )
