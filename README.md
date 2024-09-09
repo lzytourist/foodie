@@ -17,4 +17,8 @@
     - Category
     - Item
     - Modifiers
+    - Orders
+- Place orders
 - Permission checks for each operation
+
+Postman: `Foodie.postman_collection.json`
