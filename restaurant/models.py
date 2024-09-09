@@ -11,8 +11,8 @@ class Restaurant(models.Model):
     )
     name = models.CharField(max_length=150)
     address = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True) # Date time added when the record is created
+    updated_at = models.DateTimeField(auto_now=True) # Date time updated everytime the record is modified
 
     def __str__(self):
         return self.name
@@ -22,6 +22,11 @@ class Restaurant(models.Model):
 
 
 class RestaurantEmployee(models.Model):
+    """
+    Store employee and restaurant combination for checking if a use is an
+    employee of the restaurant.
+    Provide permission checking employment status of the restaurant.
+    """
     employee = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
