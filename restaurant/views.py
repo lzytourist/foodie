@@ -5,6 +5,8 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
+from app.models import Order
+from app.serializers import OrderSerializer
 from restaurant.models import Restaurant, Menu, Category, Item, Modifier
 from restaurant.permissions import IsOwner, IsOwnerOrEmployee
 from restaurant.serializers import (RestaurantSerializer,
@@ -109,3 +111,15 @@ class ModifierViewSet(ModelViewSet):
         context['restaurant_id'] = self.kwargs.get('restaurant_id')
         context['item_id'] = self.kwargs.get('item_id')
         return context
+
+
+class RestaurantOrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            Q(restaurant__owner=self.request.user) |
+            Q(restaurant__employees__employee=self.request.user)
+        )

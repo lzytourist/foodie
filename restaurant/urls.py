@@ -1,6 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
+from app.views import OrderViewSet
 from restaurant.views import *
 
 router = DefaultRouter()
@@ -23,6 +24,11 @@ router.register(
     r'(?P<restaurant_id>\d+)/menus/(?P<menu_id>\d+)/categories/(?P<category_id>\d+)/items/(?P<item_id>\d+)/modifiers',
     ModifierViewSet,
     basename='modifier'
+)
+router.register(
+    r'orders',
+    OrderViewSet,
+    basename='order'
 )
 
 urlpatterns = [
