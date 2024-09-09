@@ -68,6 +68,10 @@ class OrderItemModifier(models.Model):
     order = models.ForeignKey(
         to=Order,
         on_delete=models.CASCADE,
+    )
+    order_item = models.ForeignKey(
+        to=OrderItem,
+        on_delete=models.CASCADE,
         related_name='order_item_modifiers'
     )
     item = models.ForeignKey(
@@ -83,3 +87,9 @@ class OrderItemModifier(models.Model):
 
     class Meta:
         db_table = 'order_item_modifiers'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['order', 'item', 'modifier'],
+                name='unique_order_item_modifier'
+            )
+        ]

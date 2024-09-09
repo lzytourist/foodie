@@ -1,5 +1,8 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 
+from app.models import Order
+from app.serializers import OrderSerializer
 from restaurant.models import Restaurant, Menu, Category, Item, Modifier
 from restaurant.serializers import RestaurantSerializer, MenuSerializer, CategorySerializer, ItemSerializer, \
     ModifierSerializer
@@ -42,3 +45,10 @@ class ModifierViewSet(ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return super().get_queryset().filter(item_id=self.kwargs.get('item_id'))
+
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = (IsAuthenticated,)
+
